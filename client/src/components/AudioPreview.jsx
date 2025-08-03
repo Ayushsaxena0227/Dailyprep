@@ -3,7 +3,6 @@ import axios from "axios";
 
 const AudioPreview = () => {
   const [questions, setQuestions] = useState([]);
-  const [audioUrl, setAudioUrl] = useState("");
   const [currentIndex, setCurrentIndex] = useState(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -14,8 +13,7 @@ const AudioPreview = () => {
         const { data } = await axios.get(
           "http://localhost:5003/questions/today"
         );
-        setQuestions(data.questions);
-        setAudioUrl(data.audioUrl);
+        setQuestions(data.questions || []);
       } catch (err) {
         setError("Failed to load questions.");
       } finally {
@@ -40,6 +38,10 @@ const AudioPreview = () => {
 
   if (loading) return <p className="text-center mt-10">Loading...</p>;
   if (error) return <p className="text-center text-red-500 mt-10">{error}</p>;
+  if (!questions.length)
+    return <p className="text-center mt-10">No questions for today.</p>;
+
+  const current = questions[currentIndex];
 
   return (
     <div className="max-w-md mx-auto my-12">
@@ -49,12 +51,11 @@ const AudioPreview = () => {
             Today's Question #{currentIndex + 1}
           </h3>
         </div>
-        <p className="text-gray-300 mb-4 text-sm">{questions[currentIndex]}</p>
+        <p className="text-gray-300 mb-4 text-sm">{current.text}</p>
         <audio controls className="w-full mb-4">
-          <source src={audioUrl} type="audio/mpeg" />
+          <source src={current.audioUrl} type="audio/mpeg" />
           Your browser does not support the audio element.
         </audio>
-
         <div className="flex justify-between">
           <button
             onClick={handlePrev}
