@@ -3,13 +3,10 @@ const app = express();
 const cors = require("cors");
 const questionRoutes = require("./routes/questionRoutes");
 const uploadRoutes = require("./routes/uploadRoutes");
-
+require("dotenv").config();
 app.use(cors());
 app.use(express.json());
-app.use((req, res, next) => {
-  console.log("API is hitting");
-  next();
-});
+
 app.use("/questions", questionRoutes);
 app.use("/upload", uploadRoutes);
 

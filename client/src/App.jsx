@@ -1,12 +1,18 @@
-import { useState } from "react";
-import React from "react";
+import { Toaster } from "sonner";
 import { Routes, Route } from "react-router-dom";
 import Landing from "./Main/Landing";
+import Admin from "./Main/Admin";
+import React from "react";
+
 function App() {
   return (
-    <Routes>
-      <Route path="/" element={<Landing />} />
-    </Routes>
+    <>
+      <Toaster position="top-right" />
+      <Routes>
+        <Route path="/" element={<Landing />} />
+        <Route path="/admin" element={<Admin />} />
+      </Routes>
+    </>
   );
 }
 

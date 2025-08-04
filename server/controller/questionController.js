@@ -21,11 +21,23 @@ const addQuestions = async (req, res) => {
     if (!date || !questions || !Array.isArray(questions)) {
       return res.status(400).json({ error: "Invalid data" });
     }
-    await db.collection("questions").doc(date).set({ questions });
+
+    const docRef = db.collection("questions").doc(date);
+    const doc = await docRef.get();
+
+    let existingQuestions = [];
+    if (doc.exists) {
+      existingQuestions = doc.data().questions || [];
+    }
+
+    // Append new questions to existing ones
+    const updatedQuestions = [...existingQuestions, ...questions];
+
+    await docRef.set({ questions: updatedQuestions });
+
     return res.status(200).json({ message: "Questions added successfully" });
   } catch (error) {
     return res.status(500).json({ error: "Internal Server Error" });
   }
 };
-
 module.exports = { getTodayQuestions, addQuestions };
