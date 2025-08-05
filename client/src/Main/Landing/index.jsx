@@ -7,6 +7,8 @@ import CTA from "../../components/CTA";
 import Footer from "../../components/Footer";
 import NotificationModal from "../../components/NotificationModal";
 import GlassStyles from "../../components/GlassStyles";
+import axios from "axios";
+import { toast } from "sonner";
 
 const Landing = () => {
   const modalRef = useRef();
@@ -19,11 +21,21 @@ const Landing = () => {
     modalRef.current.classList.add("hidden");
     modalRef.current.classList.remove("flex");
   };
-  const handleSubscribe = () => {
+
+  const handleSubscribe = async () => {
     const email = modalRef.current.querySelector('input[type="email"]').value;
-    if (email) {
-      alert("Thanks for subscribing! You'll get notified when we launch.");
+    if (!email) {
+      toast.error("Please enter your email.");
+      return;
+    }
+    try {
+      await axios.post(`${import.meta.env.VITE_API_URL}/subscribe`, { email });
+      toast.success(
+        "Thanks for subscribing! You'll get notified when I will post questions."
+      );
       hideModal();
+    } catch (err) {
+      toast.error("Subscription failed. Try again.");
     }
   };
 

@@ -24,13 +24,13 @@ const NotificationModal = ({ modalRef, hideModal, handleSubscribe }) => (
         />
         <div className="flex gap-3">
           <button
-            className="flex-1 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 py-3 rounded-lg font-semibold transition-all"
+            className="flex-1 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 py-3 rounded-lg font-semibold transition-all cursor-pointer"
             onClick={handleSubscribe}
           >
             Subscribe
           </button>
           <button
-            className="flex-1 border border-gray-600 hover:border-gray-500 py-3 rounded-lg font-semibold transition-all"
+            className="flex-1 border border-gray-600 hover:border-gray-500 py-3 rounded-lg font-semibold transition-all cursor-pointer"
             onClick={hideModal}
           >
             Later
