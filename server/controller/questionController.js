@@ -1,4 +1,22 @@
 const { db } = require("../Firebase/config");
+const getAllQuestions = async (req, res) => {
+  try {
+    const snapshot = await db.collection("questions").get();
+    let allQuestions = [];
+    snapshot.forEach((doc) => {
+      const date = doc.id;
+      const questions = doc.data().questions || [];
+      questions.forEach((q) => {
+        allQuestions.push({ ...q, date });
+      });
+    });
+    // Sort by date descending (latest first)
+    allQuestions.sort((a, b) => b.date.localeCompare(a.date));
+    res.json({ questions: allQuestions });
+  } catch (err) {
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};
 
 const getTodayQuestions = async (req, res) => {
   try {
@@ -40,4 +58,4 @@ const addQuestions = async (req, res) => {
     return res.status(500).json({ error: "Internal Server Error" });
   }
 };
-module.exports = { getTodayQuestions, addQuestions };
+module.exports = { getTodayQuestions, addQuestions, getAllQuestions };

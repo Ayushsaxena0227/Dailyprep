@@ -1,5 +1,5 @@
 import React from "react";
-
+import { Link } from "react-router-dom";
 const CTA = ({ showModal }) => (
   <section className="py-20 px-4">
     <div className="max-w-4xl mx-auto text-center">
@@ -24,8 +24,13 @@ const CTA = ({ showModal }) => (
       {/* Stats */}
       <div className="grid grid-cols-3 gap-8 max-w-2xl mx-auto">
         <div className="text-center">
-          <div className="text-3xl font-bold text-purple-400 mb-2">500+</div>
-          <div className="text-gray-300">Questions Covered</div>
+          <Link
+            to="/all-questions"
+            className="text-center cursor-pointer hover:scale-105 transition-transform"
+          >
+            <div className="text-3xl font-bold text-purple-400 mb-2">500+</div>
+            <div className="text-gray-300">Questions Covered</div>
+          </Link>
         </div>
         <div className="text-center">
           <div className="text-3xl font-bold text-blue-400 mb-2">10min</div>
