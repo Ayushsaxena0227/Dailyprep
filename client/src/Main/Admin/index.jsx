@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { toast } from "sonner"; // <-- use sonner's toast
+import { toast } from "sonner";
 
 const Admin = () => {
   const [date, setDate] = useState(
@@ -11,14 +11,31 @@ const Admin = () => {
   ]);
   const [loading, setLoading] = useState(false);
   const [msg, setMsg] = useState("");
+  const [suggestions, setSuggestions] = useState([]);
   const BASE_URL = import.meta.env.VITE_API_URL;
 
+  // Fetch suggestions on mount
+  useEffect(() => {
+    const fetchSuggestions = async () => {
+      try {
+        const { data } = await axios.get(`${BASE_URL}/suggestion/all`);
+        console.log(data);
+        setSuggestions(data.suggestions || []);
+      } catch {
+        setSuggestions([]);
+      }
+    };
+    fetchSuggestions();
+  }, [BASE_URL]);
+
+  // Handle question text change
   const handleTextChange = (idx, value) => {
     const updated = [...questions];
     updated[idx].text = value;
     setQuestions(updated);
   };
 
+  // Handle audio file change and upload to Cloudinary
   const handleAudioChange = async (idx, file) => {
     if (!file) return;
     setLoading(true);
@@ -38,12 +55,15 @@ const Admin = () => {
     setLoading(false);
   };
 
+  // Add new question field
   const addQuestion = () =>
     setQuestions([...questions, { text: "", audioFile: null, audioUrl: "" }]);
 
+  // Remove question field
   const removeQuestion = (idx) =>
     setQuestions(questions.filter((_, i) => i !== idx));
 
+  // Submit all questions to backend
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (questions.some((q) => !q.text || !q.audioUrl)) {
@@ -114,7 +134,7 @@ const Admin = () => {
         <button
           type="button"
           onClick={addQuestion}
-          className=" cursor-pointer bg-blue-600 px-4 py-2 rounded text-white mr-4"
+          className="cursor-pointer bg-blue-600 px-4 py-2 rounded text-white mr-4"
         >
           + Add Question
         </button>
@@ -127,6 +147,28 @@ const Admin = () => {
         </button>
         {msg && <div className="mt-4 text-yellow-400">{msg}</div>}
       </form>
+
+      {/* Suggestions Section */}
+      <hr className="my-10 border-gray-700" />
+      <h2 className="text-2xl font-bold mb-4">User Suggestions</h2>
+      {suggestions.length === 0 ? (
+        <div className="text-gray-400">No suggestions yet.</div>
+      ) : (
+        <div className="space-y-4 max-h-96 overflow-y-auto">
+          {suggestions.map((s, idx) => (
+            <div
+              key={idx}
+              className="bg-gray-800 border border-gray-700 rounded p-4"
+            >
+              <div className="text-sm text-gray-400 mb-1">{s.date}</div>
+              <div className="text-white">{s.suggestion}</div>
+              <div className="text-xs text-gray-500 mt-1">
+                {s.createdAt && new Date(s.createdAt).toLocaleString()}
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 };

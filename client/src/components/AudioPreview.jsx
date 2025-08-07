@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
 import axios from "axios";
-
+import SuggestionBox from "../components/SuggestionBox";
 const AudioPreview = () => {
   const [questions, setQuestions] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -210,6 +210,7 @@ const AudioPreview = () => {
             Next ▶
           </button>
         </div>
+        <SuggestionBox date={new Date().toISOString().split("T")[0]} />
       </div>
     </div>
   );
