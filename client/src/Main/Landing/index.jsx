@@ -9,9 +9,11 @@ import NotificationModal from "../../components/NotificationModal";
 import GlassStyles from "../../components/GlassStyles";
 import axios from "axios";
 import { toast } from "sonner";
+import { useNavigate } from "react-router-dom";
 
 const Landing = () => {
   const modalRef = useRef();
+  const navigate = useNavigate();
 
   const showModal = () => {
     modalRef.current.classList.remove("hidden");
@@ -38,7 +40,16 @@ const Landing = () => {
       toast.error("Subscription failed. Try again.");
     }
   };
-
+  React.useEffect(() => {
+    const handler = (e) => {
+      // Example: Ctrl+Shift+A
+      if (e.ctrlKey && e.shiftKey && e.key === "A") {
+        navigate("/admin");
+      }
+    };
+    window.addEventListener("keydown", handler);
+    return () => window.removeEventListener("keydown", handler);
+  }, [navigate]);
   return (
     <div className="bg-gray-900 text-white min-h-screen font-lexend">
       <Header showModal={showModal} />
