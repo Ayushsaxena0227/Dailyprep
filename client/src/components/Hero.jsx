@@ -1,5 +1,7 @@
 import React from "react";
 import AudioPreview from "./AudioPreview";
+import { Link } from "react-router-dom";
+
 const Hero = ({ showModal }) => (
   <section className="pt-24 pb-12 px-4">
     <div className="max-w-7xl mx-auto text-center">
@@ -25,9 +27,11 @@ const Hero = ({ showModal }) => (
         <button className=" cursor-pointer bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 px-8 py-4 rounded-full font-semibold text-lg transition-all duration-300 transform hover:scale-105 shadow-lg shadow-purple-500/25">
           Start Learning Today
         </button>
-        <button className="border cursor-pointer border-gray-600 hover:border-gray-500 px-8 py-4 rounded-full font-semibold text-lg transition-all duration-300 hover:bg-gray-800">
-          View Sample Questions
-        </button>
+        <Link to="/all-questions">
+          <button className="border cursor-pointer border-gray-600 hover:border-gray-500 px-8 py-4 rounded-full font-semibold text-lg transition-all duration-300 hover:bg-gray-800">
+            View Sample Questions
+          </button>
+        </Link>
       </div>
     </div>
   </section>

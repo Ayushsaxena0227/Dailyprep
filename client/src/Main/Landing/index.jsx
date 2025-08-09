@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useRef, useEffect, useState } from "react";
 import Header from "../../components/Header";
 import Hero from "../../components/Hero";
 import Features from "../../components/Features";
@@ -12,8 +12,24 @@ import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
 
 const Landing = () => {
+  const [questions, setQuestions] = useState([]);
   const modalRef = useRef();
   const navigate = useNavigate();
+
+  // Fetch questions for CTA
+  useEffect(() => {
+    const fetchQuestions = async () => {
+      try {
+        const { data } = await axios.get(
+          `${import.meta.env.VITE_API_URL}/questions/all`
+        );
+        setQuestions(data.questions || []);
+      } catch {
+        setQuestions([]);
+      }
+    };
+    fetchQuestions();
+  }, []);
 
   const showModal = () => {
     modalRef.current.classList.remove("hidden");
@@ -40,9 +56,9 @@ const Landing = () => {
       toast.error("Subscription failed. Try again.");
     }
   };
+
   React.useEffect(() => {
     const handler = (e) => {
-      // Example: Ctrl+Shift+A
       if (e.ctrlKey && e.shiftKey && e.key === "A") {
         navigate("/admin");
       }
@@ -50,13 +66,14 @@ const Landing = () => {
     window.addEventListener("keydown", handler);
     return () => window.removeEventListener("keydown", handler);
   }, [navigate]);
+
   return (
     <div className="bg-gray-900 text-white min-h-screen font-lexend">
       <Header showModal={showModal} />
       <Hero showModal={showModal} />
       <Features />
       <DailyFlow />
-      <CTA showModal={showModal} />
+      <CTA showModal={showModal} questions={questions} />
       <Footer />
       <NotificationModal
         modalRef={modalRef}
