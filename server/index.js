@@ -1,3 +1,4 @@
+require("dotenv").config();
 const express = require("express");
 const app = express();
 const cors = require("cors");
@@ -6,7 +7,7 @@ const uploadRoutes = require("./routes/uploadRoutes");
 const subscribeRoute = require("./routes/subscribeRoutes");
 const suggestionRoute = require("./routes/suggestionRoutes");
 const adminRoute = require("./routes/admin");
-require("dotenv").config();
+
 app.use(cors());
 app.use(express.json());
 
@@ -15,6 +16,5 @@ app.use("/upload", uploadRoutes);
 app.use("/subscribe", subscribeRoute);
 app.use("/suggestion", suggestionRoute);
 app.use("/admin", adminRoute);
-
 const PORT = 5003;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
