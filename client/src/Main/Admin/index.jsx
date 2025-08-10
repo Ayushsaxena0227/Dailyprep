@@ -33,6 +33,7 @@ import {
   Hand,
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import VisitorStatsChart from "./components/VisitiorStatsChart";
 
 const ModernAdminDashboard = () => {
   const [date, setDate] = useState(
@@ -48,6 +49,11 @@ const ModernAdminDashboard = () => {
   const [suggestions, setSuggestions] = useState([]);
   const [stats, setStats] = useState({});
   const BASE_URL = import.meta.env.VITE_API_URL;
+  const [visitorsData, setVisitorsData] = useState([]);
+  const [visitorsLoading, setVisitorsLoading] = useState(true);
+  const todayStr = new Date().toISOString().split("T")[0];
+  const todayVisitorsCount =
+    visitorsData.find((v) => v.date === todayStr)?.count || 0;
   const adminSecret = localStorage.getItem("adminSecret");
 
   useEffect(() => {
@@ -83,6 +89,24 @@ const ModernAdminDashboard = () => {
 
     fetchStats();
     fetchSuggestions();
+  }, [BASE_URL, adminSecret]);
+  useEffect(() => {
+    const fetchVisitors = async () => {
+      setVisitorsLoading(true);
+      try {
+        const { data } = await axios.get(`${BASE_URL}/admin/visitors`, {
+          headers: { "x-admin-secret": adminSecret },
+        });
+        setVisitorsData(data.visitors || []);
+      } catch (err) {
+        console.error("Failed to fetch visitors", err);
+        setVisitorsData([]);
+      } finally {
+        setVisitorsLoading(false);
+      }
+    };
+
+    fetchVisitors();
   }, [BASE_URL, adminSecret]);
 
   const generateChartData = () => {
@@ -217,7 +241,7 @@ const ModernAdminDashboard = () => {
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-          {statsLoading ? (
+          {statsLoading || visitorsLoading ? (
             <>
               <SkeletonCard />
               <SkeletonCard />
@@ -263,12 +287,24 @@ const ModernAdminDashboard = () => {
                 </div>
                 <div className="text-emerald-300 text-sm">Suggestions</div>
               </div>
+              <div className="bg-gradient-to-br from-pink-600/20 to-pink-800/20 rounded-2xl p-6 border border-pink-500/20 backdrop-blur-sm hover:scale-105 transition-transform duration-200">
+                <div className="flex items-center justify-between mb-4">
+                  <div className="w-12 h-12 bg-pink-500/20 rounded-xl flex items-center justify-center">
+                    <Activity className="w-6 h-6 text-pink-400" />
+                  </div>
+                  <TrendingUp className="w-5 h-5 text-pink-400" />
+                </div>
+                <div className="text-3xl font-bold text-white mb-1">
+                  {todayVisitorsCount}
+                </div>
+                <div className="text-pink-300 text-sm">Today's Visitors</div>
+              </div>
             </>
           )}
         </div>
 
         {/* Charts */}
-        <div className="grid grid-cols-1 lg:grid-cols-1 gap-6 mb-8">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
           <div className="bg-gradient-to-br from-gray-800/50 to-gray-900/50 rounded-2xl p-6 border border-gray-700/50 backdrop-blur-sm">
             <h3 className="text-xl font-semibold mb-4 text-white flex items-center">
               <Activity className="w-5 h-5 mr-2 text-purple-400" />
@@ -309,6 +345,8 @@ const ModernAdminDashboard = () => {
               </AreaChart>
             </ResponsiveContainer>
           </div>
+
+          <VisitorStatsChart BASE_URL={BASE_URL} adminSecret={adminSecret} />
         </div>
 
         <div className="bg-gradient-to-br from-gray-800/50 to-gray-900/50 rounded-2xl p-6 border border-gray-700/50 backdrop-blur-sm mb-8">

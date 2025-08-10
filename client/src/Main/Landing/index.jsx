@@ -16,7 +16,19 @@ const Landing = () => {
   const modalRef = useRef();
   const navigate = useNavigate();
 
-  // Fetch questions for CTA
+  const BASE_URL = import.meta.env.VITE_API_URL;
+
+  useEffect(() => {
+    const trackVisit = async () => {
+      try {
+        await axios.post(`${BASE_URL}/visit`);
+      } catch (err) {
+        console.error("Failed to log visit:", err);
+      }
+    };
+    trackVisit();
+  }, [BASE_URL]);
+
   useEffect(() => {
     const fetchQuestions = async () => {
       try {
