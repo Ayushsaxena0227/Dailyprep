@@ -10,6 +10,7 @@ import GlassStyles from "../../components/GlassStyles";
 import axios from "axios";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
+import { getUserId } from "../../Utils/getUserId";
 
 const Landing = () => {
   const [questions, setQuestions] = useState([]);
@@ -17,6 +18,13 @@ const Landing = () => {
   const navigate = useNavigate();
 
   const BASE_URL = import.meta.env.VITE_API_URL;
+
+  useEffect(() => {
+    const userId = getUserId();
+    axios
+      .post(`${BASE_URL}/progress/visit`, { email: userId })
+      .catch((err) => console.error("Failed to track visit", err));
+  }, [BASE_URL]);
 
   useEffect(() => {
     const trackVisit = async () => {

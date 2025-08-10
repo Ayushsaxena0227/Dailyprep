@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import axios from "axios";
 import SuggestionBox from "../components/SuggestionBox";
+import { getUserId } from "../Utils/getUserId";
 const AudioPreview = () => {
   const [questions, setQuestions] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -44,6 +45,10 @@ const AudioPreview = () => {
 
   const handleAudioEnded = () => {
     setIsPlaying(false);
+    const userId = getUserId();
+    axios
+      .post(`${BASE_URL}/progress/questionCompleted`, { email: userId })
+      .catch((err) => console.error("Failed to log question completion", err));
   };
 
   const handleNext = () => {
@@ -112,7 +117,36 @@ const AudioPreview = () => {
         </div>
       </div>
     );
-  if (error) return <p className="text-center text-red-500 mt-10">{error}</p>;
+  if (error) {
+    return (
+      <div className="max-w-md mx-auto mb-12">
+        <div className="glass border border-yellow-600/40 rounded-2xl p-6 flex flex-col items-center text-center">
+          <div className="w-12 h-12 bg-yellow-500/20 rounded-full flex items-center justify-center mb-4">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="w-6 h-6 text-yellow-400"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+              />
+            </svg>
+          </div>
+          <h3 className="text-lg font-semibold text-white mb-2">
+            No Questions Uploaded Yet
+          </h3>
+          <p className="text-gray-400 text-sm">
+            Stay connected — today’s questions will be live soon!
+          </p>
+        </div>
+      </div>
+    );
+  }
   if (!questions.length)
     return <p className="text-center mt-10">No questions for today.</p>;
 

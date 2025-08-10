@@ -14,19 +14,27 @@ const Hero = ({ showModal }) => (
         </div>
       </div>
       <h1 className="text-5xl md:text-7xl font-bold mb-6 bg-gradient-to-r from-purple-400 via-pink-400 to-blue-400 bg-clip-text text-transparent">
-        Master Interviews
+        Master Full stack Interviews
         <br />
         in <span className="text-yellow-400">10 Minutes</span> Daily
       </h1>
-      <p className="text-xl md:text-2xl text-gray-300 mb-12 max-w-3xl mx-auto leading-relaxed">
-        Get 5-10 curated interview questions daily with audio explanations in
-        Hinglish. No signup required, just pure learning.
+      <p className="text-4xl md:text-2xl sm:text-xs mb-12 max-w-3xl mx-auto leading-relaxed space-y-3">
+        <span className="block bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent font-bold">
+          Short on time? Cramming prep into your busy day?
+        </span>
+        <span className="block bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent font-bold">
+          Tired of endless Googling for good interview questions?
+        </span>
+        <span className="block bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent font-bold">
+          Get 5–10 expert‑curated questions daily — each with engaging audio
+          explanations in Hinglish.
+        </span>
+        <span className="block bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent font-bold">
+          Practice anywhere, anytime. No signup. Just pure learning.
+        </span>
       </p>
       <AudioPreview />
       <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-        <button className=" cursor-pointer bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 px-8 py-4 rounded-full font-semibold text-lg transition-all duration-300 transform hover:scale-105 shadow-lg shadow-purple-500/25">
-          Start Learning Today
-        </button>
         <Link to="/all-questions">
           <button className="border cursor-pointer border-gray-600 hover:border-gray-500 px-8 py-4 rounded-full font-semibold text-lg transition-all duration-300 hover:bg-gray-800">
             View Sample Questions
