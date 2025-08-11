@@ -1,5 +1,11 @@
 const admin = require("firebase-admin");
-const serviceAccount = require("./serviceAccountkey.json"); // from Firebase Console
+
+const serviceAccount = JSON.parse(process.env.FIREBASE_CONFIG);
+
+// Fix private_key to replace literal '\n' sequences with real newlines
+if (serviceAccount.private_key) {
+  serviceAccount.private_key = serviceAccount.private_key.replace(/\\n/g, "\n");
+}
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
