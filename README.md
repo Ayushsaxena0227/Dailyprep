@@ -63,7 +63,8 @@ We benchmarked the app using **Google Lighthouse** before and after our performa
 ---
 
 ### **📷 Lighthouse Reports**
-<img width="1897" height="831" alt="Screenshot 2025-08-11 121004" src="https://github.com/user-attachments/assets/65b6ea3f-a6b6-4e24-888f-0c1f752defa6" />
+<img width="556" height="673" alt="Screenshot 2025-08-11 122719" src="https://github.com/user-attachments/assets/da4f4e21-9c42-4902-9e2e-2398350b030c" />
+
 
 ## Getting Started
 
