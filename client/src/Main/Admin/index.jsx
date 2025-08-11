@@ -326,7 +326,11 @@ const ModernAdminDashboard = () => {
                 </defs>
                 <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
                 <XAxis dataKey="name" stroke="#9CA3AF" />
-                <YAxis stroke="#9CA3AF" />
+                <YAxis
+                  stroke="#9CA3AF"
+                  allowDecimals={false}
+                  domain={[0, "auto"]}
+                />
                 <Tooltip
                   contentStyle={{
                     backgroundColor: "#1F2937",

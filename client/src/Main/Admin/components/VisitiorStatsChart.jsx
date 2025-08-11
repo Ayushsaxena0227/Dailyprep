@@ -14,6 +14,7 @@ import { Activity } from "lucide-react";
 const VisitorStatsChart = ({ BASE_URL, adminSecret }) => {
   const [loading, setLoading] = useState(true);
   const [visitors, setVisitors] = useState([]);
+  const [view, setView] = useState("weekly"); // daily | weekly | monthly
 
   useEffect(() => {
     const fetchVisitors = async () => {
@@ -32,60 +33,90 @@ const VisitorStatsChart = ({ BASE_URL, adminSecret }) => {
     fetchVisitors();
   }, [BASE_URL, adminSecret]);
 
-  // 📅 Format today's date
   const todayStr = new Date().toISOString().split("T")[0];
-  const todayData = visitors.find((v) => v.date === todayStr);
-  const todayCount = todayData ? todayData.count : 0;
+  const todayCount = visitors.find((v) => v.date === todayStr)?.count || 0;
 
-  // (Optional) Yesterday's count
-  const yesterday = new Date();
-  yesterday.setDate(yesterday.getDate() - 1);
-  const yesterdayStr = yesterday.toISOString().split("T")[0];
-  const yesterdayData = visitors.find((v) => v.date === yesterdayStr);
-  const yesterdayCount = yesterdayData ? yesterdayData.count : 0;
-
-  const last7DaysData = () => {
+  const formatData = () => {
     const today = new Date();
-    return Array.from({ length: 7 }).map((_, idx) => {
-      const date = new Date(today);
-      date.setDate(date.getDate() - (6 - idx));
-      const dateStr = date.toISOString().split("T")[0];
-      const match = visitors.find((v) => v.date === dateStr);
-      return {
-        name: date.toLocaleDateString("en", { weekday: "short" }),
-        visitors: match ? match.count : 0,
-      };
-    });
+
+    if (view === "daily") {
+      return [
+        {
+          name: today.toLocaleDateString("en", {
+            weekday: "short",
+            day: "numeric",
+            month: "short",
+          }),
+          visitors: todayCount,
+        },
+      ];
+    }
+
+    if (view === "weekly") {
+      return Array.from({ length: 7 }).map((_, idx) => {
+        const date = new Date(today);
+        date.setDate(date.getDate() - (6 - idx));
+        const dateStr = date.toISOString().split("T")[0];
+        const match = visitors.find((v) => v.date === dateStr);
+        return {
+          name: date.toLocaleDateString("en", { weekday: "short" }),
+          visitors: match ? match.count : 0,
+        };
+      });
+    }
+
+    if (view === "monthly") {
+      return Array.from({ length: 30 }).map((_, idx) => {
+        const date = new Date(today);
+        date.setDate(date.getDate() - (29 - idx));
+        const dateStr = date.toISOString().split("T")[0];
+        const match = visitors.find((v) => v.date === dateStr);
+        return {
+          name: date.toLocaleDateString("en", {
+            day: "numeric",
+            month: "short",
+          }),
+          visitors: match ? match.count : 0,
+        };
+      });
+    }
+
+    return [];
   };
 
-  if (loading) {
+  if (loading)
     return <div className="text-gray-400">Loading visitor stats...</div>;
-  }
 
   return (
     <div className="bg-gradient-to-br from-gray-800/50 to-gray-900/50 rounded-2xl p-6 border border-gray-700/50 backdrop-blur-sm">
-      {/* Top numeric stats */}
+      {/* Top Bar */}
       <div className="flex items-center justify-between mb-4">
         <h3 className="text-xl font-semibold text-white flex items-center">
           <Activity className="w-5 h-5 mr-2 text-cyan-400" />
-          Weekly Visitors
+          {view.charAt(0).toUpperCase() + view.slice(1)} Visitors
         </h3>
 
-        {/* Today's Visitors Display */}
-        <div className="text-right">
-          <div className="text-sm text-gray-400">Today</div>
-          <div className="text-2xl font-bold text-white">{todayCount}</div>
+        {/* Range Switch Buttons */}
+        <div className="flex space-x-2">
+          {["daily", "weekly", "monthly"].map((range) => (
+            <button
+              key={range}
+              onClick={() => setView(range)}
+              className={`px-3 py-1 rounded-full text-sm font-medium transition ${
+                view === range
+                  ? "bg-cyan-600 text-white"
+                  : "bg-gray-700 text-gray-300 hover:bg-gray-600"
+              }`}
+            >
+              {range.charAt(0).toUpperCase() + range.slice(1)}
+            </button>
+          ))}
         </div>
-      </div>
-
-      {/* Optional yesterday display */}
-      <div className="text-gray-400 text-sm mb-2">
-        Yesterday: {yesterdayCount}
       </div>
 
       {/* Chart */}
       <ResponsiveContainer width="100%" height={300}>
-        <AreaChart data={last7DaysData()}>
+        <AreaChart data={formatData()}>
           <defs>
             <linearGradient id="visitorsGradient" x1="0" y1="0" x2="0" y2="1">
               <stop offset="5%" stopColor="#06b6d4" stopOpacity={0.3} />
@@ -94,7 +125,7 @@ const VisitorStatsChart = ({ BASE_URL, adminSecret }) => {
           </defs>
           <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
           <XAxis dataKey="name" stroke="#9CA3AF" />
-          <YAxis stroke="#9CA3AF" />
+          <YAxis stroke="#9CA3AF" allowDecimals={false} domain={[0, "auto"]} />
           <Tooltip
             contentStyle={{
               backgroundColor: "#1F2937",

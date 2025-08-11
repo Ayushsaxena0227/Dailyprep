@@ -10,6 +10,7 @@ import {
   Activity,
   ArrowUpDown,
 } from "lucide-react";
+import { toast } from "sonner";
 
 const AllQuestions = () => {
   const [questions, setQuestions] = useState([]);
@@ -106,7 +107,16 @@ const AllQuestions = () => {
     }
   };
 
-  const handleAudioEnded = () => setIsPlaying(false);
+  const handleAudioEnded = () => {
+    setIsPlaying(false);
+    const userId = getUserId();
+    axios
+      .post(`${BASE_URL}/progress/questionCompleted`, { email: userId })
+      .then(() => {
+        toast.success("🎯 +1 Question Completed!");
+      })
+      .catch((err) => console.error("Failed to log question completion", err));
+  };
 
   const handleNext = () => {
     if (currentIndex < displayed.length - 1) {

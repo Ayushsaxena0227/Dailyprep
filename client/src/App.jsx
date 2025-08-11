@@ -5,7 +5,6 @@ import React from "react";
 import AllQuestions from "./Main/Landing/Allquestions";
 import { useState } from "react";
 import { lazy, Suspense } from "react";
-import UserProgress from "./Main/Landing/Progress";
 
 const AdminDashboard = lazy(() => import("./Main/Admin"));
 const AdminLogin = lazy(() => import("./Main/Admin/AdminLogin"));
@@ -41,7 +40,6 @@ function App() {
           }
         />
 
-        <Route path="/progress" element={<UserProgress />} />
         <Route path="/all-questions" element={<AllQuestions />} />
       </Routes>
     </>
