@@ -23,5 +23,5 @@ app.use("/visit", trackVisitRoute);
 app.use("/admin/visitors", adminVisitorsRoute);
 
 app.use("/progress", progressRoutes);
-const PORT = 5003;
+const PORT = 5006;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

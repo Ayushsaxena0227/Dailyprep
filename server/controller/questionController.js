@@ -49,7 +49,7 @@ const addQuestions = async (req, res) => {
     const updatedQuestions = [...existingQuestions, ...questions];
     await docRef.set({ questions: updatedQuestions });
 
-    const viewUrl = `${process.env.FRONTEND_URL}/all-questions`;
+    const viewUrl = "https://dailyprep.vercel.app/all-questions";
     await notifySubscribers(
       `🔥 New Interview Questions for ${date}`,
       `

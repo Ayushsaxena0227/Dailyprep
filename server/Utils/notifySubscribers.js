@@ -12,7 +12,12 @@ async function notifySubscribers(subject, htmlContent) {
     }
 
     const emails = subsSnap.docs.map((doc) => doc.data().email).filter(Boolean);
-
+    console.log("EMAIL_FROM:", process.env.EMAIL_FROM);
+    console.log(
+      "SENDGRID_API_KEY starts with:",
+      process.env.SENDGRID_API_KEY?.slice(0, 5)
+    );
+    console.log("Emails to notify:", emails);
     // Break into smaller chunks (SendGrid free limit = ~100 per request)
     const chunkSize = 80;
     for (let i = 0; i < emails.length; i += chunkSize) {
